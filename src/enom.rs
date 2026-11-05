@@ -231,19 +231,12 @@ impl RegistrarModule for Enom {
         })
     }
 
-    fn set_lock<'a>(
-        &'a self,
-        domain: &'a str,
-        locked: bool,
-    ) -> BoxFuture<'a, RegistrarResult<()>> {
+    fn set_lock<'a>(&'a self, domain: &'a str, locked: bool) -> BoxFuture<'a, RegistrarResult<()>> {
         Box::pin(async move {
             self.enom(
                 "SetRegLock",
                 domain,
-                &[(
-                    "UnlockRegistrar",
-                    if locked { "0" } else { "1" }.into(),
-                )],
+                &[("UnlockRegistrar", if locked { "0" } else { "1" }.into())],
             )
             .await
             .map(|_| ())
@@ -261,10 +254,7 @@ impl RegistrarModule for Enom {
                 domain,
                 &[
                     ("Service", "WPPS".into()),
-                    (
-                        "NumYears",
-                        if enabled { "1" } else { "0" }.into(),
-                    ),
+                    ("NumYears", if enabled { "1" } else { "0" }.into()),
                 ],
             )
             .await
